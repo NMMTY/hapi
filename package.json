@@ -13,10 +13,10 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "encore.dev": "^1.43.8",
+    "@hitomihiumi/micro-docgen": "^0.2.1",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
-    "@hitomihiumi/micro-docgen": "^0.2.1"
+    "encore.dev": "^1.43.9"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.13.0"

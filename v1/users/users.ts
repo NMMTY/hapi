@@ -3,6 +3,7 @@ import log from "encore.dev/log";
 import { client } from "../../bot";
 import { Activity, User } from "discord.js";
 import { assetsURL, getFlags, getGuildData } from "../../handlers/functions";
+import { User as IUser } from "../../interfaces/DiscordData";
 
 export const get = api(
     { expose: true, method: "GET", path: "/v1/users/:id" },
@@ -12,7 +13,7 @@ export const get = api(
 
         if (!user) {
             log.error(`User with id ${id} not found in cache.`);
-            return { status: 404, data: { error: "User not found" } };
+            return { status: 404, error: "User not found" };
         }
 
         let badges: string[] = [];
@@ -37,5 +38,6 @@ export const get = api(
 
 interface Response {
     status: number;
-    data?: any;
+    data?: IUser;
+    error?: string;
 }
