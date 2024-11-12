@@ -1,18 +1,20 @@
 import { api } from "encore.dev/api";
 import log from "encore.dev/log";
 import { client } from "../../bot";
-import {assetsURL} from "../../handlers/functions";
+import { assetsURL } from "../../handlers/functions";
+import { Presence } from "../../interfaces/DiscordData";
 
 interface Response {
     status: number;
-    data?: any;
+    data?: Presence;
+    error?: string
 }
 
 export const get = api(
     { expose: true, method: "GET", path: "/v1/presence/:id" },
     async ({ id }: { id: string }): Promise<Response> => {
         log.info(`Getting user with id: ${id}`);
-        let simplifiedPresence: any = {};
+        let simplifiedPresence: Presence = { status: null, activities: [] };
 
         try {
             // @ts-ignore
@@ -35,7 +37,6 @@ export const get = api(
                     syncId: activity.syncId,
                     flags: activity.flags,
                     emoji: activity.emoji,
-                    createdTimestamp: activity.createdTimestamp,
                     buttons: activity.buttons,
                 }));
 
@@ -61,7 +62,7 @@ export const get = api(
             }
         } catch (error) {
             log.error(`Error fetching or processing presence data: ${error}`);
-            return { status: 500, data: { error: "Internal Server Error" } };
+            return { status: 500, error: "Internal Server Error" };
         }
 
         return { status: 200, data: simplifiedPresence };
