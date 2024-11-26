@@ -24,37 +24,49 @@ export const get = api(
             if (member && member.presence) {
                 log.info(`Fetching presence for member with id: ${member.id}`);
                 simplifiedPresence.status = member.presence.status;
-                simplifiedPresence.activities = member.presence.activities.map((activity) => ({
-                    name: activity.name,
-                    type: activity.type,
-                    url: activity.url,
-                    state: activity.state,
-                    details: activity.details,
-                    assets: activity.assets,
-                    timestamps: activity.timestamps,
-                    party: activity.party,
-                    applicationId: activity.applicationId,
-                    syncId: activity.syncId,
-                    flags: activity.flags,
-                    emoji: activity.emoji,
-                    buttons: activity.buttons,
-                }));
+                simplifiedPresence.activities = member.presence.activities.map((activity: any) => {
+                    if (activity.name !== "Custom Status") {
+                        let assets = { largeImageURL: "", smallImageURL: "" }
+                        assets = assetsURL(activity, assets);
 
-                simplifiedPresence.activities.forEach((activity: any) => {
-                  if (activity.name !== "Custom Status") {
-                      let assets = { largeImageURL: "", smallImageURL: "" }
-                      assets = assetsURL(activity, assets);
+                        if (activity.assets) {
+                            if (assets.largeImageURL.length > 0) {
+                                activity.assets.largeImageURL = assets.largeImageURL;
+                            }
+                            if (assets.smallImageURL.length > 0) {
+                                activity.assets.smallImageURL = assets.smallImageURL;
+                            }
+                        }
 
-                      if (activity.assets) {
-                          if (assets.largeImageURL.length > 0) {
-                              activity.assets.largeImageURL = assets.largeImageURL;
-                          }
-                          if (assets.smallImageURL.length > 0) {
-                              activity.assets.smallImageURL = assets.smallImageURL;
-                          }
-                      }
-                  }
-                })
+                        return {
+                            name: activity.name,
+                            type: activity.type,
+                            url: activity.url,
+                            details: activity.details,
+                            state: activity.state,
+                            applicationId: activity.applicationId,
+                            timestamps: activity.timestamps,
+                            party: activity.party,
+                            assets: activity.assets,
+                            emoji: activity.emoji,
+                            buttons: activity.buttons
+                        };
+                    } else {
+                        return {
+                            name: activity.name,
+                            type: activity.type,
+                            url: activity.url,
+                            details: activity.details,
+                            state: activity.state,
+                            applicationId: activity.applicationId,
+                            timestamps: activity.timestamps,
+                            party: activity.party,
+                            assets: activity.assets,
+                            emoji: activity.emoji,
+                            buttons: activity.buttons
+                        };
+                    }
+                });
 
                 log.info(`Presence fetched and simplified for member with id: ${member.id}`);
             } else {
