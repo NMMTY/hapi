@@ -27,6 +27,9 @@ For uptime checks, you need to provide a JSON object with the following fields:
 $ curl -X POST -d '{ "url": "google.com", "webhook": "discord.com/api/webhooks/...", "userID": "991777093312585808" }' https://example.com/v1/uptime
 ```
 
+#### `GET /v1/guild/:id`
+Fetch information about the guild with the given ID.
+
 ### Authenticated
 
 #### Authorization

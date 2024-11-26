@@ -1,8 +1,8 @@
 import { api, Query } from "encore.dev/api";
 import log from "encore.dev/log";
 import { client } from "../../bot";
-import { Activity, User } from "discord.js";
-import { assetsURL, getFlags, getGuildData } from "../../handlers/functions";
+import { User } from "discord.js";
+import { getFlags } from "../../handlers/functions";
 import { User as IUser } from "../../interfaces/DiscordData";
 
 export const get = api(
@@ -21,7 +21,20 @@ export const get = api(
         let bannerURL: string = "";
         let avatarDecorationURL: string = "";
 
-        const data = { ...user, badges, avatarURL, bannerURL, avatarDecorationURL };
+        const data = { badges, avatarURL, bannerURL, avatarDecorationURL } as IUser;
+
+        Object.assign(data, {
+            id: user.id,
+            bot: user.bot,
+            system: user.system,
+            username: user.username,
+            discriminator: user.discriminator,
+            globalName: user.globalName,
+            avatar: user.avatar,
+            banner: user.banner,
+            accentColor: user.accentColor,
+            avatarDecoration: user.avatarDecoration,
+        } as IUser);
 
         try {
             if (user.flags) data.badges = getFlags(user.flags.toArray());
